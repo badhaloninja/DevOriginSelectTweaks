@@ -56,17 +56,17 @@ namespace DevOriginSelectTweaks
             public static void Postfix(ContextMenu menu)
             {
                 if (!config.GetValue(enabled)) return; // Lazy man's disabled
-                Uri icon = new Uri("neosdb:///b778eb36757426a5a3e669844e064a2a3d80f54a4a58e3978ad28781bfebaf81.png");
+                Uri icon = new Uri("neosdb:///b778eb36757426a5a3e669844e064a2a3d80f54a4a58e3978ad28781bfebaf81.png"); // OriginMode.png
                 ContextMenuItem contextMenuItem = menu.AddItem("What", icon, default(color));
 
-                var field = contextMenuItem.Slot.AttachComponent<ValueField<int>>();
-                field.Value.Value = config.GetValue(originSnipingMode);
-                field.Value.OnValueChange += (vf) =>
+                // Config sync
+                var field = contextMenuItem.Slot.AttachComponent<ValueField<int>>(); // Relay field
+                field.Value.Value = config.GetValue(originSnipingMode); // Set to current value
+                field.Value.OnValueChange += (vf) => // Hook into change to update config
                 {  // Yeah
                     config.Set(originSnipingMode, vf.Value);
                 };
 
-                //contextMenuItem.AttachOptionDescriptionDriver<int>();
                 contextMenuItem.SetupValueCycle(field.Value, new List<OptionDescription<int>> {
                         new OptionDescription<int>(0, "Laser only", new color?(color.Red), NeosAssets.Graphics.Icons.Tool.RayMode),
 						new OptionDescription<int>(1, "Auto", new color?(color.Orange), NeosAssets.Graphics.Icons.Tool.RayMode2),
